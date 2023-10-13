@@ -1,0 +1,82 @@
+﻿@model IEnumerable<AppPizzeria.Models.Ordine>
+
+@{
+    ViewBag.Title = "GestioneOrdini";
+}
+
+<h2>Gestione Ordini</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Utente.Username)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DataOrdine)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CostoTotale)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Nota)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Indirizzo)
+        </th>
+        <th></th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Utente.Username)
+            </td>
+            <td>
+                @item.DataOrdine.ToShortDateString()
+            </td>
+            <td>
+                @item.CostoTotale.ToString("C")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nota)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Indirizzo)
+            </td>
+            <td>
+                <button class="btn btn-primary updateButton" data-ordineid="@item.IdOrdine">Ordine completato</button>
+            </td>
+            @*<td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.IdOrdine }) |
+                @Html.ActionLink("Details", "Details", new { id = item.IdOrdine }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.IdOrdine })
+            </td>*@
+        </tr>
+    }
+
+</table>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $(".updateButton").click(function () {
+                var ordineId = $(this).data("ordineid");
+                console.log(ordineId);
+                $.ajax({
+                    url: '@Url.Action("AggiornaOrdine", "Admin")',
+                    type: 'POST',
+                    data: { id: ordineId },
+                    success: function (result) {
+                        console.log(result);
+                        location.reload();
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            });
+        });
+    </script>
+}

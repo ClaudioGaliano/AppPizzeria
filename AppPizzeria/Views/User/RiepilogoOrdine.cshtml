@@ -1,0 +1,56 @@
+﻿@model IEnumerable<AppPizzeria.Models.DettaglioOrdini>
+
+@{
+    ViewBag.Title = "RiepilogoOrdine";
+}
+
+<h2>Riepilogo Ordine</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Ordine.Nota)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Prodotto.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Quantita)
+        </th>
+        <th>
+            Prezzo
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ordine.Nota)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Prodotto.Nome)
+            </td>
+            <td>
+                @using (Html.BeginForm("ModificaOrdine", "User", new { id = item.IdDettaglio }, FormMethod.Post))
+                {
+                    <input type="number" name="quantita" id="quantita" value="@item.Quantita" class="mb-3">
+                }
+            </td>
+            <td>
+                @((@item.Prodotto.Prezzo * @item.Quantita).ToString("C"))
+            </td>
+            <td>
+                @Html.ActionLink("Elimina", "EliminaOrdine", new { id = item.IdDettaglio }, new { @class = "btn btn-danger" })
+            </td>
+        </tr>
+    }
+
+</table>
+
+<div>
+    <h4>Prezzo totale: @ViewBag.PrezzoTotale.ToString("C")</h4>
+</div>
+
+@Html.ActionLink("Invia Ordine", "InviaOrdine", "User", new { @class = "btn btn-primary" })

@@ -1,0 +1,27 @@
+﻿@using AppPizzeria.Models
+@model List<Prodotto>
+
+<h2>Aggiungi al carrello</h2>
+
+<section class="d-flex grid gap-5">
+    @foreach (Prodotto prodotto in Model)
+    {
+        <div class="col-3">
+            <div class="card" style="width: 18rem; height: 100%;">
+                <img src="~/Content/img/@prodotto.Foto" class="card-img-top" alt="@prodotto.Nome">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">@prodotto.Nome</h5>
+                    <p class="card-text">Prezzo: @prodotto.Prezzo.ToString("C")</p>
+                    <p class="card-text">Tempo di consegna: @prodotto.TempoConsegna min</p>
+                    <p class="card-text flex-grow-1">Ingredienti: @prodotto.Ingredienti</p>
+                    @using (Html.BeginForm("MoveToCart", "User", new { id = prodotto.IdProdotto }, FormMethod.Post))
+                    {
+                        <label for="quantita">Quantità:</label>
+                        <input type="number" name="quantita" id="quantita" class="mb-3">
+                        <input type="submit" value="Aggiungi al carrello" class="btn btn-primary" />
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</section>

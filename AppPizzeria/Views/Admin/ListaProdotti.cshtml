@@ -1,0 +1,24 @@
+﻿@using AppPizzeria.Models
+@model List<Prodotto>
+
+<h2>Lista Prodotti</h2>
+
+<section class="d-flex grid gap-5">
+    @foreach (Prodotto prodotto in Model)
+    {
+        <div class="col-3">
+            <div class="card" style="width: 18rem; height: 100%;">
+                <img src="~/Content/img/@prodotto.Foto" class="card-img-top" alt="@prodotto.Nome">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">@prodotto.Nome</h5>
+                    <p class="card-text">Prezzo: @prodotto.Prezzo.ToString("C")</p>
+                    <p class="card-text">Tempo di consegna: @prodotto.TempoConsegna min</p>
+                    <p class="card-text flex-grow-1">Ingredienti: @prodotto.Ingredienti</p>
+                    @Html.ActionLink("Modifica", "ModificaProdotto", "Admin", new { id = prodotto.IdProdotto }, new { @class = "btn btn-warning" })
+                    @Html.ActionLink("Elimina", "EliminaProdotto", "Admin", new { id = prodotto.IdProdotto }, new { @class = "btn btn-danger mt-3" })
+
+                </div>
+            </div>
+        </div>
+    }
+</section>

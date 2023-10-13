@@ -1,0 +1,76 @@
+﻿
+@{
+    ViewBag.Title = "Cassa";
+}
+
+<h2>Cassa</h2>
+
+<div class="row text-center">
+    <div class="col-md-6 p-4">
+        <div class="card p-3" style="border-color:red; border-width:3px">
+            <h2>Totale ordini evasi oggi</h2>
+            <p id="totale"></p>
+        </div>
+    </div>
+    <div class="col-md-6 p-4">
+        <div class="card p-3" style="border-color:red; border-width:3px">
+            <h2 id="info">Totale incassato <br/> nella giornata selezionata</h2>
+            <p id="txtRicerca" style="display:inline"></p>
+        </div>
+    </div>
+</div>
+
+@if (ViewBag.ErroreRicerca != null)
+{
+    <p>@ViewBag.ErroreRicerca</p>
+}
+
+<div class="row">
+    <input type="date" class="form-control" id="data">
+    <button type="button" id="ricerca" class="form-control btn btn-danger mt-3">Avvia Ricerca</button>
+</div>
+
+@section scripts {
+    <script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '@Url.Action("OrdiniEvasi", "Admin")',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $('#totale').text(data);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+        $('#ricerca').click(function () {
+            var dataSelezionata = $('#data').val();
+
+            var data = new Date(dataSelezionata);
+
+            var giorno = data.getDate();
+            var mese = data.getMonth() + 1;
+            var anno = data.getFullYear();
+
+            var dataFormattata = giorno + '/' + mese + '/' + anno;
+
+            $.ajax({
+                url: '@Url.Action("Incasso", "Admin")',
+                type: 'GET',
+                data: { dataOrdine: dataSelezionata },
+                dataType: 'json',
+                success: function (data) {
+                    var incasso = data.toLocaleString('it-IT', { style: 'currency', currency: 'EUR' });
+                    $('#txtRicerca').text(incasso);
+                    $('#info').html('Totale incassato <br/> nella giornata del ' + dataFormattata);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+    </script>
+}
